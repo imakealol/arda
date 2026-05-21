@@ -50,6 +50,81 @@ finally:
     urlopen = urllib2.urlopen
     Request = urllib2.Request
 
+if six.PY2:
+    _str = str
+    str = unicode
+    unicode = unicode
+    basestring = basestring
+    def bytes(b, encoding="ascii"):
+        return _str(b)
+elif six.PY3:
+    bytes = bytes
+    str = unicode = basestring = str
+
+
+def r_request(url, referer=None):
+    try:
+        if not url:
+            return
+        url =  "https:" + url if not url.startswith('http') else url
+        with requests.Session() as session:
+            if referer:
+                session.headers.update({'User-Agent': agent(), 'Referer': referer})
+            else:
+                elements = urlparse(url)
+                base = '%s://%s' % (elements.scheme, (elements.netloc or elements.path))
+                session.headers.update({'User-Agent': agent(), 'Referer': base})
+            page = session.get(url, headers=session.headers, timeout=10).text
+        return page
+    except Exception:
+        log_utils.log('r_request Exception for url: %s' % url, 1)
+        return
+
+
+def list_request(doms, query='', scheme='https://'):
+    if isinstance(doms, list):
+        for i in range(len(doms)):
+            dom = random.choice(doms)
+            try:
+                base_link = scheme + dom if not dom.startswith('http') else dom
+                url = urljoin(base_link, query)
+                r = requests.get(url, headers={'User-Agent': agent(), 'Referer': base_link}, timeout=7)
+                if r.ok:
+                    log_utils.log('list_request chosen base: ' + base_link)
+                    return r.text, base_link
+                raise Exception()
+            except Exception:
+                doms = [d for d in doms if not d == dom]
+                log_utils.log('list_request failed dom: ' + repr(i) + ' - ' + dom)
+                pass
+    else:
+        base_link = scheme + doms if not doms.startswith('http') else doms
+        url = urljoin(base_link, query)
+        r = requests.get(url, headers={'User-Agent': agent(), 'Referer': base_link}, timeout=10)
+        return r.text, base_link
+
+
+def list_client_request(doms, query='', scheme='https://', post=None):
+    if isinstance(doms, list):
+        for i in range(len(doms)):
+            dom = random.choice(doms)
+            try:
+                base_link = scheme + dom if not dom.startswith('http') else dom
+                url = urljoin(base_link, query)
+                r = request(url, headers={'User-Agent': agent(), 'Referer': base_link}, output='extended', post=post, timeout=7)
+                if 199 < int(r[1]) < 300:
+                    log_utils.log('list_request chosen base: ' + base_link)
+                    return r[0], base_link
+                raise Exception()
+            except Exception:
+                doms = [d for d in doms if not d == dom]
+                log_utils.log('list_request failed dom: ' + repr(i) + ' - ' + dom)
+                pass
+    else:
+        base_link = scheme + doms if not doms.startswith('http') else doms
+        url = urljoin(base_link, query)
+        r = request(url, headers={'User-Agent': agent(), 'Referer': base_link}, post=post, timeout=10)
+        return r, base_link
 
 def request(url, close=True, redirect=True, error=False, verify=True, proxy=None, post=None, headers=None, mobile=False, XHR=False,
             limit=None, referer=None,cookie=None, compression=False, output='', timeout='30', username=None, password=None, as_bytes=False):
@@ -475,6 +550,8 @@ def replaceHTMLCodes(txt):
     return txt
 
 
+def agent():
+    return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
 def randomagent():
     BR_VERS = [
         ['%s.0' % i for i in x_range(18, 50)],

@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
 
-"""
-    Exodus Add-on
-    ///Updated for TheOath///
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+'''
+********************************************************cm*
+* The Crew Add-on
+*
+* @file source_utils.py
+* @package script.module.thecrew
+*
+* @copyright (c) 2025, The Crew
+* @license GNU General Public License, version 3 (GPL-3.0)
+*
+********************************************************cm*
+'''
 
 import base64
 import hashlib
 import re
-from kodi_six import xbmc
+import xbmc
+
 import six
-from six.moves import urllib_parse
+
+
+
+from urllib.parse import urlparse, unquote, quote_plus
 
 from resources.lib.modules import cleantitle
 from resources.lib.modules import client
@@ -31,6 +30,7 @@ from resources.lib.modules import directstream
 from resources.lib.modules import trakt
 from resources.lib.modules import pyaes
 from resources.lib.modules import log_utils
+from resources.lib.modules.crewruntime import c
 
 RES_4K = [' 4k', ' hd4k', ' 4khd', ' uhd', ' ultrahd', ' ultra hd', ' 2160', ' 2160p', ' hd2160', ' 2160hd']
 RES_1080 = [' 1080', ' 1080p', ' 1080i', ' hd1080', ' 1080hd', ' m1080p', ' fullhd', ' full hd', ' 1o8o', ' 1o8op']
@@ -40,8 +40,8 @@ SCR = [' scr', ' screener', ' dvdscr', ' dvd scr', ' r5', ' r6']
 CAM = [' camrip', ' tsrip', ' hdcam', ' hd cam', ' cam rip', ' hdts', ' dvdcam', ' dvdts', ' cam', ' telesync', ' ts']
 
 def supported_video_extensions():
-    supported_video_extensions = xbmc.getSupportedMedia('video').split('|')
-    return [i for i in supported_video_extensions if i != '' and i != '.zip']
+    supported_extensions = xbmc.getSupportedMedia('video').split('|')
+    return [i for i in supported_extensions if i != '' and i != '.zip']
 
 def get_qual(term):
     if any(i in term for i in RES_4K):
@@ -66,13 +66,14 @@ def is_anime(content, type, type_id):
 
 def get_release_quality(release_name, release_link=None):
 
-    if release_name is None: return
+    #cm - def always need 2 return values and not NONE returned
+    if release_name is None:
+        return 'sd', []
 
     try:
         quality = None
 
         release_name = cleantitle.get_title(release_name)
-
         quality = get_qual(release_name)
 
         if not quality:
@@ -94,12 +95,129 @@ def get_release_quality(release_name, release_link=None):
         return 'sd', []
 
 
+
 def getFileType(url):
+    try:
+        url = six.ensure_str(url)
+        url = client.replaceHTMLCodes(url)
+        url = unquote(url)
+        url = url.lower()
+        url = re.sub('[^a-z0-9 ]+', ' ', url)
+    except:
+        url = str(url)
+
+    file_type = []
+
+    # Video quality
+    if any(term in url for term in [' bluray ', ' blu ray ']):
+        file_type.append('BLURAY')
+    if any(term in url for term in [' bd r ', ' bdr ', ' bd rip ', ' bdrip ', ' br rip ', ' brrip ']):
+        file_type.append('BD-RIP')
+    if ' remux ' in url:
+        file_type.append('REMUX')
+    if any(term in url for term in [' dvdrip ', ' dvd rip ']):
+        file_type.append('DVD-RIP')
+    if any(term in url for term in [' dvd ', ' dvdr ', ' dvd r ']):
+        file_type.append('DVD')
+    if any(term in url for term in [' webdl ', ' web dl ', ' web ', ' web rip ', ' webrip ']):
+        file_type.append('WEB')
+    if ' hdtv ' in url:
+        file_type.append('HDTV')
+    if ' sdtv ' in url:
+        file_type.append('SDTV')
+    if any(term in url for term in [' hdrip ', ' hd rip ']):
+        file_type.append('HDRIP')
+    if any(term in url for term in [' uhdrip ', ' uhd rip ']):
+        file_type.append('UHDRIP')
+    if ' r5 ' in url:
+        file_type.append('R5')
+    if any(term in url for term in [' cam ', ' hdcam ', ' hd cam ', ' cam rip ', ' camrip ']):
+        file_type.append('CAM')
+    if any(term in url for term in [' ts ', ' telesync ', ' hdts ', ' pdvd ']):
+        file_type.append('TS')
+    if any(term in url for term in [' tc ', ' telecine ', ' hdtc ']):
+        file_type.append('TC')
+    if any(term in url for term in [' scr ', ' screener ', ' dvdscr ', ' dvd scr ']):
+        file_type.append('SCR')
+
+    # Video codecs
+    if ' xvid ' in url:
+        file_type.append('XVID')
+    if ' avi ' in url:
+        file_type.append('AVI')
+    if any(term in url for term in [' h 264 ', ' h264 ', ' x264 ', ' avc ']):
+        file_type.append('H.264')
+    if any(term in url for term in [' h 265 ', ' h256 ', ' x265 ', ' hevc ']):
+        file_type.append('HEVC')
+    if ' hi10p ' in url:
+        file_type.append('HI10P')
+    if ' 10bit ' in url:
+        file_type.append('10BIT')
+    if ' 3d ' in url:
+        file_type.append('3D')
+    if any(term in url for term in [' hdr ', ' hdr10 ', ' dolby vision ', ' hlg ']):
+        file_type.append('HDR')
+    if ' imax ' in url:
+        file_type.append('IMAX')
+
+    # Audio codecs
+    if any(term in url for term in [' ac3 ', ' ac 3 ']):
+        file_type.append('AC3')
+    if ' aac ' in url:
+        file_type.append('AAC')
+    if ' aac5 1 ' in url:
+        file_type.append('AAC / 5.1')
+    if any(term in url for term in [' dd ', ' dolby ', ' dolbydigital ', ' dolby digital ']):
+        file_type.append('DD')
+    if any(term in url for term in [' truehd ', ' true hd ']):
+        file_type.append('TRUEHD')
+    if ' atmos ' in url:
+        file_type.append('ATMOS')
+    if any(term in url for term in [' ddplus ', ' dd plus ', ' ddp ', ' eac3 ', ' eac 3 ']):
+        file_type.append('DD+')
+    if ' dts ' in url:
+        file_type.append('DTS')
+    if any(term in url for term in [' hdma ', ' hd ma ']):
+        file_type.append('HD.MA')
+    if any(term in url for term in [' hdhra ', ' hd hra ']):
+        file_type.append('HD.HRA')
+    if any(term in url for term in [' dtsx ', ' dts x ']):
+        file_type.append('DTS:X')
+    if ' dd5 1 ' in url:
+        file_type.append('DD / 5.1')
+    if ' ddp5 1 ' in url:
+        file_type.append('DD+ / 5.1')
+    if any(term in url for term in [' 5 1 ', ' 6ch ']):
+        file_type.append('5.1')
+    if any(term in url for term in [' 7 1 ', ' 8ch ']):
+        file_type.append('7.1')
+
+    # Subtitles and dubbing
+    if ' korsub ' in url:
+        file_type.append('HC-SUBS')
+    if any(term in url for term in [' subs ', ' subbed ', ' sub ']):
+        file_type.append('SUBS')
+    if any(term in url for term in [' dub ', ' dubbed ', ' dublado ']):
+        file_type.append('DUB')
+
+    # Other tags
+    if ' repack ' in url:
+        file_type.append('REPACK')
+    if ' proper ' in url:
+        file_type.append('PROPER')
+    if ' nuked ' in url:
+        file_type.append('NUKED')
+
+    return ' / '.join(file_type)
+
+
+
+def getFileType_old(url):
 
     try:
         url = six.ensure_str(url)
         url = client.replaceHTMLCodes(url)
-        url = urllib_parse.unquote(url)
+        url = unquote(url)
         url = url.lower()
         url = re.sub('[^a-z0-9 ]+', ' ', url)
     except:
@@ -228,7 +346,7 @@ def check_direct_url(url):
 def check_url(url):
     try:
         url = client.replaceHTMLCodes(url)
-        url = urllib_parse.unquote(url)
+        url = unquote(url)
         url = re.sub('[^A-Za-z0-9]+', ' ', url)
         url = six.ensure_str(url)
         url = url.lower()
@@ -294,7 +412,7 @@ def is_host_valid(url, domains):
 def __top_domain(url):
     if not (url.startswith('//') or url.startswith('http://') or url.startswith('https://')):
         url = '//' + url
-    elements = urllib_parse.urlparse(url)
+    elements = urlparse(url)
     domain = elements.netloc or elements.path
     domain = domain.split('@')[-1].split(':')[0]
     regex = "(?:www\.)?([\w\-]*\.[\w\-]{2,3}(?:\.[\w\-]{2,3})?)$"
@@ -316,7 +434,7 @@ def aliases_to_array(aliases, filter=None):
 
 
 def append_headers(headers):
-    return '|%s' % '&'.join(['%s=%s' % (key, urllib_parse.quote_plus(headers[key])) for key in headers])
+    return '|%s' % '&'.join(['%s=%s' % (key, quote_plus(headers[key])) for key in headers])
 
 
 def _size(siz):
@@ -356,26 +474,32 @@ def check_directstreams(url, hoster='', quality='SD'):
         urls = directstream.google(url)
         if not urls:
             tag = directstream.googletag(url)
-            if tag: urls = [{'quality': tag[0]['quality'], 'url': url}]
-        if urls: host = 'gvideo'
+            if tag:
+                urls = [{'quality': tag[0]['quality'], 'url': url}]
+        if urls:
+            host = 'gvideo'
     elif 'ok.ru' in url:
         urls = directstream.odnoklassniki(url)
-        if urls: host = 'vk'
+        if urls:
+            host = 'vk'
     elif 'vk.com' in url:
         urls = directstream.vk(url)
-        if urls: host = 'vk'
+        if urls:
+            host = 'vk'
     elif any(x in url for x in ['akamaized', 'blogspot', 'ocloud.stream']):
         urls = [{'url': url}]
-        if urls: host = 'CDN'
-        
-    direct = True if urls else False
+        if urls:
+            host = 'CDN'
 
-    if not urls: urls = [{'quality': quality, 'url': url}]
+    direct = bool(urls)
+
+    if not urls:
+        urls = [{'quality': quality, 'url': url}]
 
     return urls, host, direct
 
 def scraper_error(name):
-    log_utils.log('An exception error in scraper "' + name + '" occurred.')   
+    c.log('An exception error in scraper "' + name + '" occurred.')
 
 
 # if salt is provided, it should be string
@@ -394,7 +518,8 @@ def evp_decode(cipher_text, passphrase, salt=None):
 
 def evpKDF(passwd, salt, key_size=8, iv_size=4, iterations=1, hash_algorithm="md5"):
     target_key_size = key_size + iv_size
-    derived_bytes = ""
+    #cm - added the 'b' to the byte string - 20250613
+    derived_bytes = b""
     number_of_derived_words = 0
     block = None
     hasher = hashlib.new(hash_algorithm)

@@ -201,9 +201,9 @@ class CrewRuntime:
                 xbmc.log(f"\n\n--> addon name @ 147 = {self.name} | {self.pluginversion} | {self.moduleversion}  \n\n")
 
                 if not os.path.exists(log_file):
-                    _file = open(log_file, 'w')#, encoding="utf8"
+                    _file = open(log_file, 'w', encoding='utf-8')#, encoding="utf8"
                     _file.close()
-                with open(log_file, 'a') as _file:#, encoding="utf8"
+                with open(log_file, 'a', encoding='utf-8') as _file:#, encoding="utf8"
                     _date = datetime.now().date()
                     _time = str(datetime.now().time())
                     line = f'[{_date} {_time}] {head}: {msg}'
@@ -211,6 +211,19 @@ class CrewRuntime:
 
         except Exception as exc:
             self.log(f'[ {self.name} ] Logging Failure: {exc}', 1)
+
+    def scraper_error(self, msg, scraper, trace=0):
+        """
+        Logs an error message associated with a specific scraper.
+
+        Args:
+            msg (str): The error message to log.
+            scraper (str): The name of the scraper where the error occurred.
+            trace (int, optional): If set to 1, includes traceback information. Defaults to 0.
+        """
+        msg = f'\n============================================================\nScraper Error in scraper: {scraper}\n============================================================\n{msg}'
+        self.log(msg, trace)
+
 
     def in_addon(self) -> bool:
         '''
@@ -231,7 +244,7 @@ class CrewRuntime:
         .getSettingBool
         .getSettingNumber
         .setSettingInt
-        .setSettingBool 
+        .setSettingBool
         '''
         return xbmcaddon.Addon().setSetting(id=setting, value=val)
 

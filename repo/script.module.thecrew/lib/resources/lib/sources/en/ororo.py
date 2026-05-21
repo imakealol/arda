@@ -1,33 +1,30 @@
 # -*- coding: utf-8 -*-
 
 '''
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+********************************************************cm*
+* The Crew Add-on
+*
+* @file ororo.py
+* @package script.module.thecrew
+*
+* @copyright (c) 2025, The Crew
+* @license GNU General Public License, version 3 (GPL-3.0)
+*
+********************************************************cm*
 '''
 
 
-import re,base64
-import simplejson as json
+import re
+import base64
+import json
 
 from resources.lib.modules import cache
 from resources.lib.modules import control
 from resources.lib.modules import client
+from resources.lib.modules.crewruntime import c
 
-try: from urlparse import parse_qs, urljoin
-except ImportError: from urllib.parse import parse_qs, urljoin
-try: from urllib import urlencode, quote_plus, quote
-except ImportError: from urllib.parse import urlencode, quote_plus, quote
 
+from urllib.parse import urljoin
 
 class source:
     def __init__(self):
@@ -44,14 +41,15 @@ class source:
         self.user = control.setting('ororo.user')
         self.password = control.setting('ororo.pass')
         self.headers = {
-        'Authorization': 'Basic %s' % base64.b64encode('%s:%s' % (self.user, self.password).encode('utf-8')),
+        'Authorization': 'Basic %s' % base64.b64encode(f'{self.user}:{self.password}'.encode('utf-8')),
         'User-Agent': 'Kodi'
         }
 
 
     def movie(self, imdb, title, localtitle, aliases, year):
         try:
-            if (self.user == '' or self.password == ''): raise Exception()
+            if (self.user == '' or self.password == ''):
+                raise Exception()
 
             url = cache.get(self.ororo_moviecache, 60, self.user)
             url = [i[0] for i in url if imdb == i[1]][0]
@@ -64,7 +62,8 @@ class source:
 
     def tvshow(self, imdb, tvdb, tvshowtitle, localtvshowtitle, aliases, year):
         try:
-            if (self.user == '' or self.password == ''): raise Exception()
+            if (self.user == '' or self.password == ''):
+                raise Exception()
 
             url = cache.get(self.ororo_tvcache, 120, self.user)
             url = [i[0] for i in url if imdb == i[1]][0]
@@ -77,9 +76,11 @@ class source:
 
     def episode(self, url, imdb, tvdb, title, premiered, season, episode):
         try:
-            if (self.user == '' or self.password == ''): raise Exception()
+            if (self.user == '' or self.password == ''):
+                raise Exception()
 
-            if url == None: return
+            if url is None:
+                return
 
             url = urljoin(self.base_link, url)
 
@@ -127,9 +128,11 @@ class source:
         try:
             sources = []
 
-            if url == None: return sources
+            if url is None:
+                return sources
 
-            if (self.user == '' or self.password == ''): raise Exception()
+            if (self.user == '' or self.password == ''):
+                raise Exception()
 
             url = urljoin(self.base_link, url)
             url = client.request(url, headers=self.headers)
@@ -144,5 +147,3 @@ class source:
 
     def resolve(self, url):
         return url
-
-

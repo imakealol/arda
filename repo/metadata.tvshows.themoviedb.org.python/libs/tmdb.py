@@ -35,7 +35,6 @@ HEADERS = (
     ('User-Agent', 'Kodi TV Show scraper by Team Kodi; contact pkscout@kodi.tv'),
     ('Accept', 'application/json'),
 )
-api_utils.set_headers(dict(HEADERS))
 
 TMDB_PARAMS = {'api_key': settings.TMDB_CLOWNCAR}
 BASE_URL = 'https://api.themoviedb.org/3/{}'
@@ -66,6 +65,7 @@ def search_show(title, year=None):
     :return: a list with found TV shows
     """
     source_settings = settings.getSourceSettings()
+    api_utils.set_headers(dict(HEADERS))
     params = _get_params()
     results = []
     ext_media_id = data_utils.parse_media_id(title)
@@ -96,6 +96,7 @@ def search_show(title, year=None):
                 results = resp.get('tv_results', [])
         else:
             results = resp.get('results', [])
+    api_utils.set_headers({})
     return results
 
 
@@ -108,6 +109,7 @@ def find_by_id(unique_ids):
     supported_ids = ['imdb', 'facebook', 'instagram',
                      'tvdb', 'tiktok', 'twitter', 'wikidata', 'youtube']
     source_settings = settings.getSourceSettings()
+    api_utils.set_headers(dict(HEADERS))
     params = _get_params()
     for key, value in unique_ids.items():
         if key in supported_ids:
@@ -117,6 +119,7 @@ def find_by_id(unique_ids):
                 search_url, params=params, verboselog=source_settings["VERBOSELOG"])
             if resp is not None:
                 return resp.get('tv_results', [])
+    api_utils.set_headers()
     return []
 
 
@@ -125,6 +128,7 @@ def load_episode_list(show_info, season_map, ep_grouping):
     """get the IMDB ratings details"""
     """Load episode list from themoviedb.org API"""
     source_settings = settings.getSourceSettings()
+    api_utils.set_headers(dict(HEADERS))
     episode_list = []
     if ep_grouping is not None:
         logger.debug(
@@ -163,6 +167,7 @@ def load_episode_list(show_info, season_map, ep_grouping):
                 episode['org_epnum'] = episode['episode_number']
                 episode_list.append(episode)
     show_info['episodes'] = episode_list
+    api_utils.set_headers({})
     return show_info
 
 
@@ -176,6 +181,8 @@ def load_show_info(show_id, ep_grouping=None, named_seasons=None):
     :param named_seasons: the named seasons from the NFO file
     :return: show info or None
     """
+
+    api_utils.set_headers(dict(HEADERS))
     source_settings = settings.getSourceSettings()
     if named_seasons == None:
         named_seasons = []
@@ -186,6 +193,7 @@ def load_show_info(show_id, ep_grouping=None, named_seasons=None):
         params = _get_params()
         params['append_to_response'] = 'credits,content_ratings,external_ids,images,videos,keywords'
         params['include_image_language'] = '%s,en,null' % source_settings["LANG_IMAGES"][0:2]
+        params['include_video_language'] = '%s,en,null' % source_settings["LANG_IMAGES"][0:2]
         show_info = api_utils.load_info(
             show_url, params=params, verboselog=source_settings["VERBOSELOG"])
         if show_info is None:
@@ -245,6 +253,7 @@ def load_show_info(show_id, ep_grouping=None, named_seasons=None):
         cache.cache_show_info(show_info)
     else:
         logger.debug('using cached show info')
+    api_utils.set_headers({})
     return show_info
 
 
@@ -258,6 +267,7 @@ def load_episode_info(show_id, episode_id):
     :return: episode info or None
     """
     source_settings = settings.getSourceSettings()
+    api_utils.set_headers(dict(HEADERS))
     show_info = load_show_info(show_id)
     if show_info is not None:
         try:
@@ -311,7 +321,9 @@ def load_episode_info(show_id, episode_id):
                 break
         show_info['episodes'][int(episode_id)] = ep_return
         cache.cache_show_info(show_info)
+        api_utils.set_headers({})
         return ep_return
+    api_utils.set_headers({})
     return None
 
 
@@ -360,6 +372,7 @@ def load_fanarttv_art(show_info):
     :return: show info
     """
     source_settings = settings.getSourceSettings()
+    api_utils.set_headers(dict(HEADERS))
     if source_settings["FANARTTV_CLIENTKEY"]:
         FANARTTV_PARAMS['client_key'] = source_settings["FANARTTV_CLIENTKEY"]
 
@@ -378,7 +391,7 @@ def load_fanarttv_art(show_info):
                 if lang == '' or lang == '00':
                     lang = None
                 filepath = ''
-                if lang is None or lang == source_settings["LANG_DETAILS"][0:2] or lang == 'en':
+                if lang is None or lang == source_settings["LANG_IMAGES"][0:2] or lang == 'en':
                     filepath = item.get('url')
                 if filepath:
                     if tmdb_type.startswith('season'):
@@ -396,6 +409,7 @@ def load_fanarttv_art(show_info):
                     else:
                         show_info['images'][tmdb_type].append(
                             {'file_path': filepath, 'type': 'fanarttv', 'iso_639_1': lang})
+    api_utils.set_headers({})
     return show_info
 
 
@@ -464,9 +478,32 @@ def _sort_image_types(imagelist):
     :param imagelist:
     :return: imagelist
     """
+    source_settings = settings.getSourceSettings()
+    new_imagelist = {}
     for image_type, images in imagelist.items():
-        imagelist[image_type] = _image_sort(images, image_type)
-    return imagelist
+        if image_type == "backdrops":
+            backdrops = []
+            landscape = []
+            for image in images:
+                if (image.get('iso_639_1') is not None and image.get('iso_639_1').lower() != 'xx') and source_settings["CATLANDSCAPE"]:
+                    landscape.append(image)
+                else:
+                    backdrops.append(image)
+            new_imagelist['landscape'] = _image_sort(landscape, 'landscape')
+            new_imagelist['backdrops'] = _image_sort(backdrops, 'backdrops')
+        elif image_type == 'posters':
+            posters = []
+            keyart = []
+            for image in images:
+                if (image.get('iso_639_1') is None or image.get('iso_639_1').lower() == 'xx') and source_settings["CATKEYART"]:
+                    keyart.append(image)
+                else:
+                    posters.append(image)
+            new_imagelist['posters'] = _image_sort(posters, 'posters')
+            new_imagelist['keyart'] = _image_sort(keyart, 'keyart')
+        else:
+            new_imagelist[image_type] = _image_sort(images, image_type)
+    return new_imagelist
 
 
 def _image_sort(images, image_type):
@@ -485,7 +522,7 @@ def _image_sort(images, image_type):
     firstimage = True
     for image in images:
         image_lang = image.get('iso_639_1')
-        if image_lang == source_settings["LANG_DETAILS"][0:2]:
+        if image_lang == source_settings["LANG_IMAGES"][0:2]:
             lang_pref.append(image)
         elif image_lang == 'en':
             lang_en.append(image)

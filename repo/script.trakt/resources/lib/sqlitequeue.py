@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import sqlite3
 from json import loads, dumps
 
 from time import sleep
 
 try:
-    from thread import get_ident
+    from _thread import get_ident
 except ImportError:
-    from dummy_thread import get_ident
+    from _dummy_thread import get_ident
 
-import xbmc
 import xbmcvfs
 import xbmcaddon
 import logging
+from typing import Any, Iterator, Optional, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +45,11 @@ class SqliteQueue(object):
             )
     _purge = 'DELETE FROM queue'
 
-    def __init__(self):
-        self.path = xbmc.translatePath(__addon__.getAddonInfo("profile")).decode("utf-8")
+    path: str
+    _connection_cache: Dict[int, sqlite3.Connection]
+
+    def __init__(self) -> None:
+        self.path = xbmcvfs.translatePath(__addon__.getAddonInfo("profile"))
         if not xbmcvfs.exists(self.path):
             logger.debug("Making path structure: %s" % repr(self.path))
             xbmcvfs.mkdir(self.path)
@@ -56,32 +58,32 @@ class SqliteQueue(object):
         with self._get_conn() as conn:
             conn.execute(self._create)
 
-    def __len__(self):
+    def __len__(self) -> int:
         with self._get_conn() as conn:
-            l = conn.execute(self._count).next()[0]
-        return l
+            executed = conn.execute(self._count).fetchone()[0]
+        return executed
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Any]:
         with self._get_conn() as conn:
             for _, obj_buffer in conn.execute(self._iterate):
-                yield loads(str(obj_buffer))
+                yield loads(obj_buffer)
 
-    def _get_conn(self):
+    def _get_conn(self) -> sqlite3.Connection:
         id = get_ident()
         if id not in self._connection_cache:
             self._connection_cache[id] = sqlite3.Connection(self.path, timeout=60)
         return self._connection_cache[id]
 
-    def purge(self):
+    def purge(self) -> None:
         with self._get_conn() as conn:
             conn.execute(self._purge)
 
-    def append(self, obj):
+    def append(self, obj: Any) -> None:
         obj_buffer = dumps(obj)
         with self._get_conn() as conn:
             conn.execute(self._append, (obj_buffer,))
 
-    def get(self, sleep_wait=True):
+    def get(self, sleep_wait: bool = True) -> Optional[Any]:
         keep_pooling = True
         wait = 0.1
         max_wait = 2
@@ -91,10 +93,11 @@ class SqliteQueue(object):
             while keep_pooling:
                 conn.execute(self._write_lock)
                 cursor = conn.execute(self._get)
-                try:
-                    id, obj_buffer = next(cursor)
+                row = cursor.fetchone()
+                if row:
+                    id, obj_buffer = row
                     keep_pooling = False
-                except StopIteration:
+                else:
                     conn.commit()  # unlock the database
                     if not sleep_wait:
                         keep_pooling = False
@@ -104,13 +107,13 @@ class SqliteQueue(object):
                     wait = min(max_wait, tries / 10 + wait)
             if id:
                 conn.execute(self._del, (id,))
-                return loads(str(obj_buffer))
+                return loads(obj_buffer)
         return None
 
-    def peek(self):
+    def peek(self) -> Optional[Any]:
         with self._get_conn() as conn:
             cursor = conn.execute(self._peek)
-            try:
-                return loads(str(next(cursor)[0]))
-            except StopIteration:
-                return None
+            row = cursor.fetchone()
+            if row:
+                return loads(row[0])
+            return None

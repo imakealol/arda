@@ -7,22 +7,32 @@ msgstr ""
 "Project-Id-Version: XBMC Addons\n"
 "Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Lithuanian (http://www.transifex.com/projects/p/xbmc-addons/language/lt/)\n"
+"PO-Revision-Date: 2021-05-23 10:29+0000\n"
+"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"Language-Team: Lithuanian <https://kodi.weblate.cloud/projects/kodi-add-ons-scripts/script-trakt/lt_lt/>\n"
+"Language: lt_LT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: lt\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 4.6.2\n"
+
+msgctxt "Addon Summary"
+msgid "TV and movie scrobbler for Trakt.tv"
+msgstr "TV ir filmų registratorius, skirtas Trakt.tv"
+
+msgctxt "Addon Description"
+msgid "Automatically scrobble all TV episodes and movies you are watching to Trakt.tv! Keep a comprehensive history of everything you've watched and be part of a global community of TV and movie enthusiasts. Sign up for a free account at http://trakt.tv and get a ton of features:[CR][CR]- Automatically scrobble what you're watching[CR]- Mobile apps for iPhone, iPad, Android, and Windows Phone[CR]- Share what you're watching (in real time) and rating to facebook and twitter[CR]- Personalized calendar so you never miss a TV show[CR]- Follow your friends and people you're interesed in[CR]- Use watchlists so you don't forget to what to watch[CR]- Track your media collections and impress your friends[CR]- Create custom lists around any topics you choose[CR]- Easily track your TV show progress across all seasons and episodes[CR]- Track your progress against industry lists such as the IMDb Top 250[CR]- Discover new shows and movies based on your viewing habits[CR]- Widgets for your forum signature[CR][CR]What can this addon do?[CR][CR]- Automatically scrobble all TV episodes and movies you are watching[CR]- Sync your TV episode and movie collections to Trakt (triggered after a library update)[CR]- Auto clean your Trakt collection so that it matches up with Kodi[CR]- Keep watched statuses synced between Kodi and Trakt[CR]- Rate movies and episode after watching them[CR][CR]Special thanks to all who contributed to this plugin! Check the commit history and changelog to see these talented developers."
+msgstr "Automatiškai užregistruoti visus TV epizodus ir filmus, kuriuos žiūrite, Trakt.tv sistemoje! Laikykite išsamią istoriją visko, ką peržiūrėjote ir būkite globalios TV ir filmų entuziastų bendruomenės dalimi. Susikurkite nemokamą paskyrą http://trakt.tv puslapyje ir gaukite daugybę funkcionalumų:[CR][CR]- Automatiškai užregistruokite tai, ką žiūrite[CR]- Mobilios programelės, skirtos iPhone, iPad, Android ir Windows Phone[CR]- Dalinkitės tuo, ką žiūrite (realiuoju laiku) ir įvertinimais facebook ir twitter sistemose[CR]- Suasmenintas kalendorius, kad niekada nepraleistumėte TV laidos[CR]- Sekite savo draugus ir žmones, kuriais domitės[CR]- Naudokite peržiūros sąrašą, kad nepamirštumėte ką norite peržiūrėti[CR]- Sekite savo media kolekciją ir padarykite įspūdį savo draugams[CR]- Sukurkite savus sąrašus bet kokia pasirinkta tema[CR]- Lengvai sekite TV laidos progresą tarp visų sezonų ir epizodų[CR]- Sekite savo progresą tarp industrinių sąrašų, tokių kaip IMDb Top 250[CR]- Atraskite naujas laidas ir filmus pagal savo žiūrėjimo įpročius[CR]- Valdiklis jūsų forumo paskyros parašui[CR][CR]Ką gali šis priedas?[CR][CR]- Automatiškai registruoti visus TV epizodus ir filmus, kuriuos žiūrite[CR]- Sinchronizuoti jūsų TV epizodų ir filmų kolekciją su Trakt.tv (vykdoma po bibliotekos atnaujinimo)[CR]- Automatiškai išvalyti jūsų Trakt.tv kolekciją, kad ji sutaptų su Kodi[CR]- Išlaikyti peržiūrėjimo būsenas sinchronizuotas tarp Kodi ir Trakt.tv[CR]- Įvertinti filmus ir epizodus juos peržiūrėjus[CR][CR]Specialus ačiū visiems, kurie prisidėjo prie šio įskiepio! Patikrinkite kodo istoriją ir pakeitimų sąrašą, kad pamatytumėte šiuos talentingus kūrėjus."
 
 msgctxt "#32000"
 msgid "General"
 msgstr "Pagrindinis"
 
+# empty strings from id 32001 to 32002
 msgctxt "#32003"
-msgid "Startup Delay"
-msgstr "Paleidimo uždelsimas"
+msgid "Startup Delay (seconds)"
+msgstr ""
 
 msgctxt "#32004"
 msgid "Rating"
@@ -608,17 +618,10 @@ msgctxt "#32157"
 msgid "Account Authorization"
 msgstr "Paskyros autorizacija"
 
+# empty string with id 32158
 msgctxt "#32159"
-msgid "Visit {0} or scan the QR Code below."
-msgstr "Apsilankykite {0} arba nuskaitykite žemiau esantį QR kodą.."
-
-msgctxt "#32160"
-msgid "Authorize the trakt addon to access your account."
-msgstr "Autorizuoti Trakt priedą, kad jis galėtų pasiekti jūsų paskyrą."
-
-msgctxt "#32161"
-msgid "Enter the PIN provided in the box below."
-msgstr "Įveskite žemiau pateiktą PIN kodą."
+msgid "Visit {0} or scan the QR code."
+msgstr ""
 
 msgctxt "#32162"
 msgid "The trakt addon CAN NOT be used without authorizing it to access your trakt.tv account."
@@ -639,3 +642,139 @@ msgstr "Trakt - pridėta į peržiūros sąrašą"
 msgctxt "#32166"
 msgid "Trakt - Failed adding to watchlist"
 msgstr "Trakt - nepavyko pridėti į peržiūros sąrašą"
+
+msgctxt "#32167"
+msgid "Offset scrobble start by X minutes"
+msgstr ""
+
+msgctxt "#32168"
+msgid "Sync ratings"
+msgstr ""
+
+msgctxt "#32169"
+msgid "Kodi movie ratings are up to date"
+msgstr ""
+
+msgctxt "#32170"
+msgid "%i movie(s) ratings will be updated in Kodi"
+msgstr ""
+
+msgctxt "#32171"
+msgid "Updating %i of %i movie ratings in Kodi"
+msgstr ""
+
+msgctxt "#32172"
+msgid "Ratings updated for %i movie(s) in Kodi"
+msgstr ""
+
+msgctxt "#32173"
+msgid "Kodi episode ratings are up to date"
+msgstr ""
+
+msgctxt "#32174"
+msgid "Updating %i of %i episode ratings in Kodi"
+msgstr ""
+
+msgctxt "#32175"
+msgid "Ratings updated for %i episode(s) in Kodi"
+msgstr ""
+
+msgctxt "#32176"
+msgid "Kodi show ratings are up to date"
+msgstr ""
+
+msgctxt "#32177"
+msgid "Updating %i of %i show ratings in Kodi"
+msgstr ""
+
+msgctxt "#32178"
+msgid "Ratings updated for %i show(s) in Kodi"
+msgstr ""
+
+msgctxt "#32179"
+msgid "Trakt movie ratings are up to date"
+msgstr ""
+
+msgctxt "#32180"
+msgid "%i movie ratings will be updated on Trakt"
+msgstr ""
+
+msgctxt "#32181"
+msgid "Trakt show ratings are up to date"
+msgstr ""
+
+msgctxt "#32182"
+msgid "%i show ratings will be updated on Trakt"
+msgstr ""
+
+msgctxt "#32183"
+msgid "Attempt to scrobble MythTV PVR recordings"
+msgstr ""
+
+msgctxt "#32184"
+msgid "Attempt secondary show title search"
+msgstr ""
+
+msgctxt "#32185"
+msgid "Exclude Plugins"
+msgstr ""
+
+msgctxt "#32186"
+msgid "Allow script exclusions"
+msgstr ""
+
+msgctxt "#32187"
+msgid "Override proxy"
+msgstr ""
+
+msgctxt "#42187"
+msgid "Always enable a proxy, regardless of the kodi configuration. The default value is from the kodi configuration, but can be overriden below. The trakt plugin currently only supports HTTP or HTTPS proxies where kodi also supports SOCKS proxies."
+msgstr ""
+
+msgctxt "#32188"
+msgid "Proxy URI"
+msgstr ""
+
+msgctxt "#42188"
+msgid "Location of the proxy server."
+msgstr ""
+
+msgctxt "#32189"
+msgid "Proxy port"
+msgstr ""
+
+msgctxt "#42189"
+msgid "Port of the proxy server."
+msgstr ""
+
+msgctxt "#32190"
+msgid "Username"
+msgstr ""
+
+msgctxt "#42190"
+msgid "Optional user name needed to authenticate with the proxy."
+msgstr ""
+
+msgctxt "#32191"
+msgid "Password"
+msgstr ""
+
+msgctxt "#42191"
+msgid "Optional password needed to authenticate with the proxy."
+msgstr ""
+
+#~ msgctxt "#32003"
+#~ msgid "Startup Delay"
+#~ msgstr "Paleidimo uždelsimas"
+
+#~ msgctxt "#32159"
+#~ msgid "Visit {0} or scan the QR Code below."
+#~ msgstr "Apsilankykite {0} arba nuskaitykite žemiau esantį QR kodą.."
+
+#~ msgctxt "#32160"
+#~ msgid "Authorize the trakt addon to access your account."
+#~ msgstr "Autorizuoti Trakt priedą, kad jis galėtų pasiekti jūsų paskyrą."
+
+#~ msgctxt "#32161"
+#~ msgid "Enter the PIN provided in the box below."
+#~ msgstr "Įveskite žemiau pateiktą PIN kodą."

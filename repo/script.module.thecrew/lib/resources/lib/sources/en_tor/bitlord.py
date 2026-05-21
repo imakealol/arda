@@ -1,32 +1,28 @@
 # -*- coding: utf-8 -*-
 
-
 '''
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+********************************************************cm*
+* The Crew Add-on
+*
+* @file bitlord.py
+* @package script.module.thecrew
+*
+* @copyright (c) 2025, The Crew
+* @license GNU General Public License, version 3 (GPL-3.0)
+*
+********************************************************cm*
 '''
 
 import re
 
-try: from urlparse import parse_qs, urljoin
-except ImportError: from urllib.parse import parse_qs, urljoin
-try: from urllib import urlencode, quote_plus, quote
-except ImportError: from urllib.parse import urlencode, quote_plus, quote
+from urllib.parse import parse_qs, urljoin, urlencode, quote_plus
 
 from resources.lib.modules import cleantitle
 from resources.lib.modules import client
 from resources.lib.modules import debrid
 from resources.lib.modules import source_utils
+from resources.lib.modules.crewruntime import c
+
 
 
 class source:
@@ -70,6 +66,8 @@ class source:
 
 
     def sources(self, url, hostDict, hostprDict):
+
+
         sources = []
         try:
             if url is None:
@@ -128,8 +126,10 @@ class source:
 
                     info = ' | '.join(info)
 
-                    sources.append({'source': 'torrent', 'quality': quality, 'language': 'en', 'url': url,
-                                                'info': info, 'direct': False, 'debridonly': True})
+                    sources.append({
+                        'source': 'torrent', 'quality': quality, 'language': 'en', 'url': url,
+                        'info': info, 'direct': False, 'debridonly': True
+                        })
 
                 return sources
 

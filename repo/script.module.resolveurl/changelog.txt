@@ -1,15 +1,17 @@
-Version 5.1.152 (November 11, 2024)
+Version 5.1.199 (May 20, 2026)
 - Code Base Changes:
-    - None
+    - Add ByParr support
+    - Fix regression bug in helpers.py
 
 - Resolvers Added:
-    - vinovo
+    - brainzaps
+    - vidsonic
+    - vrra
 
 - Resolvers Fixed/Updated:
-    - filelions
-    - filemoon
-    - turboviplay
-    - voe
+    - byse
+    - doodstream (requires ByParr)
+    - vidmoly
 
 - Resolvers Removed
     - None

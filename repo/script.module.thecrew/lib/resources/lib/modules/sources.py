@@ -25,7 +25,7 @@ import re
 import sys
 import time
 import traceback
-import urllib 
+import urllib
 
 from urllib.parse import *
 
@@ -91,7 +91,7 @@ class sources:
 
                     return control.execute('Container.Update(%s?action=addItem&title=%s)' % (sys.argv[0], urllib.parse.quote_plus(title)))
 
-                elif select == '0' or select == '1': 
+                elif select == '0' or select == '1':
                     url = self.sourcesDialog(items)
                 else:
                     url = self.sourcesDirect(items)
@@ -168,7 +168,7 @@ class sources:
         discart = meta['discart'] if 'discart' in meta else '0'
         if discart == '0': discart = addonDiscart
 
-        if not control.setting('fanart') == 'true': 
+        if not control.setting('fanart') == 'true':
             fanart = addonFanart
             poster = addonPoster
             banner = addonBanner
@@ -881,7 +881,7 @@ class sources:
 
             #cached
             cachedRDSources = [dict(i.items()) for i in torrent_sources if (any(v in i.get('info_hash') for v in cachedRDHashes) and i.get('debrid', '') == 'Real-Debrid')]
-            cachedTorrents.extend(cachedRDSources) 
+            cachedTorrents.extend(cachedRDSources)
             cachedADSources = [dict(i.items()) for i in torrent_sources if (any(v in i.get('info_hash') for v in cachedADHashes) and i.get('debrid', '') == 'AllDebrid')]
             cachedTorrents.extend(cachedADSources)
             cachedPMSources = [dict(i.items()) for i in torrent_sources if (any(v in i.get('info_hash') for v in cachedPMHashes) and i.get('debrid', '') == 'Premiumize.me')]

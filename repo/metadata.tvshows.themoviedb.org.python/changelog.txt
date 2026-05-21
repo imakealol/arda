@@ -1,3 +1,20 @@
+1.7.6
+fix for image sort not using separate image language setting
+fix for fanarttv landscape art overwriting TMDb landscape art
+
+1.7.5
+added option to split keyart from posters
+fixed sorting and trimming so that landscape and keyart aren't deleted
+
+1.7.4
+fix for breaking change to TMDB API for fanart
+
+1.7.3
+fix to properly using English videos as fallback
+
+1.7.2
+fix for inability to scrape IMDB ratings
+
 1.7.1
 fix for crash when getting config from TMDb website
 fix for TMDb config never getting updated from website without restart

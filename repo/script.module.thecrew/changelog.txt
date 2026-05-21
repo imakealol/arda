@@ -1,5 +1,14 @@
 [COLOR orchid][B]version 2.0.6[/B][/COLOR]
 
+* [COLOR orange]Fixed[/COLOR]: scrapers (in module 2.1.1), added some
+
+* [COLOR orchid]Extra[/COLOR]: Bumped version to 2.0.6/module to 2.1.1
+
+
+
+
+[COLOR orchid][B]version 2.0.6[/B][/COLOR]
+
 * [COLOR green]Added[/COLOR]: holiday/christmas movies menu item will be shown automagically in december
 
 * [COLOR orange]Fixed[/COLOR]: scraper (in module 2.0.9)
@@ -33,12 +42,12 @@
 
 [COLOR orchid][B]version 2.0.4[/B][/COLOR]
 
-* [COLOR orange]Fixed[/COLOR]: bug in service, several code changes cleanup 
+* [COLOR orange]Fixed[/COLOR]: bug in service, several code changes cleanup
 * [COLOR orange]Fixed[/COLOR]: bug in Calendar, cleanup code
-* [COLOR orange]Fixed[/COLOR]: bug in Movies, not showing clearart and clearlogo 
+* [COLOR orange]Fixed[/COLOR]: bug in Movies, not showing clearart and clearlogo
 * [COLOR orange]Fixed[/COLOR]: bug in Search in Movies
-* [COLOR orange]Fixed[/COLOR]: bug in multiple scrapers 
- 
+* [COLOR orange]Fixed[/COLOR]: bug in multiple scrapers
+
 * [COLOR orchid]Extra[/COLOR]: Bumped version to 2.0.4/module to 2.0.7
 
 
@@ -47,14 +56,14 @@
 * [COLOR green]Added[/COLOR]: check for scrapers (back again)
 * [COLOR green]Added[/COLOR]: bool to distinguish widget or addon window, refresh for styles is way better
 
-* [COLOR orange]Fixed[/COLOR]: bug in the service 
-* [COLOR orange]Fixed[/COLOR]: bug in monitor when quitting Kodi prevented cleanup of system sources 
+* [COLOR orange]Fixed[/COLOR]: bug in the service
+* [COLOR orange]Fixed[/COLOR]: bug in monitor when quitting Kodi prevented cleanup of system sources
 * [COLOR orange]Fixed[/COLOR]: bug in library when adding new tvshows (thnx to WCB)
 * [COLOR orange]Fixed[/COLOR]: bug in clearart and clearlogo showing in movies (when available)
 * [COLOR orange]Fixed[/COLOR]: bug in settings, cleaned some lines that were too long
 * [COLOR orange]Fixed[/COLOR]: bug with background when hovering over movies/TVShows in widgets
 * [COLOR orange]Fixed[/COLOR]: bug where same info got pulled twice (e.g. year, mpaa in movies)
-* [COLOR orange]Fixed[/COLOR]: trailers for movies and tvshows in Android 
+* [COLOR orange]Fixed[/COLOR]: trailers for movies and tvshows in Android
 * [COLOR orange]Fixed[/COLOR]: multiple scrapers
 * [COLOR orange]Fixed[/COLOR]: a LOT of code and introduced global class
 
@@ -102,7 +111,7 @@
 * [COLOR orange]Fixed[/COLOR]: playing trailers (when available) without yt key
 * [COLOR orange]Fixed[/COLOR]: pagination IMDB lists
 * [COLOR orange]Fixed[/COLOR]: Bug with "Show unaired Seasons/episodes" setting not opening any seasons
-   
+
 * [COLOR cyan]Changed[/COLOR]: Browse series workings
 * [COLOR cyan]Changed[/COLOR]: Bookmarks, all old bookmarks/resumepoints will be gone.
 
