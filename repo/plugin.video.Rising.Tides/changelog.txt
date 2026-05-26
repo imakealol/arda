@@ -1,2 +1,14 @@
+Version 3.2.8 (May 23, 2026)
+- New Features:
+    - Added More Filters
+    - Live sports integration
+    - Basketball, Football, Cricket, Hockey and more
+    - Live/today/popular filters
+    - Combined filters e.g. live:cricket
 
-
+Version 3.2.7 (May 22, 2026)
+- New Features:
+    - Live sports integration
+    - Basketball, Football, Cricket, Hockey and more
+    - Live/today/popular filters
+    - Combined filters e.g. live:cricket
